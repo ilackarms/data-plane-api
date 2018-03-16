@@ -3,16 +3,102 @@ Version history
 
 1.6.0
 =====
-* http : added idle timeout for :ref:`upstream http connections
-  <envoy_api_field_core.HttpProtocolOptions.idle_timeout>`.
+
+* access log: added DOWNSTREAM_REMOTE_ADDRESS, DOWNSTREAM_REMOTE_ADDRESS_WITHOUT_PORT, and
+  DOWNSTREAM_LOCAL_ADDRESS :ref:`access log formatters <config_access_log_format>`.
+  DOWNSTREAM_ADDRESS access log formatter has been deprecated.
+* access log: added less than or equal (LE) :ref:`comparison filter
+  <envoy_api_msg_config.filter.accesslog.v2.ComparisonFilter>`.
+* access log: added configuration to :ref:`runtime filter
+  <envoy_api_msg_config.filter.accesslog.v2.RuntimeFilter>` to set default sampling rate, divisor,
+  and whether to use independent randomness or not.
+* admin: added :ref:`/runtime <operations_admin_interface_runtime>` admin endpoint to read the
+  current runtime values.
+* build: added support for `building envoy with exported symbols <https://github.com/envoyproxy/envoy/tree/master/bazel#enabling-optional-features>`_.
+  This change allows scripts loaded with the lua filter to load shared object libraries such as
+  those installed via luarocks.
+* config: added support for sending error details as grpc.rpc.Status in
+  :ref:`DiscoveryRequest <envoy_api_msg_DiscoveryRequest>`.
+* config: added support for :ref:`inline delivery <envoy_api_msg_core.DataSource>` of TLS
+  certificates and private keys.
+* config: added restrictions for the backing sources of xDS resources. For filesystem based xDS the file
+  must exist at configuration time. For cluster based xDS (api\_config\_source, and ADS) the backing
+  cluster must be statically defined and be of non-EDS type.
+* grpc: the Google gRPC C++ library client is now supported as specified in the :ref:`gRPC services
+  overview <arch_overview_grpc_services>` and :ref:`GrpcService <envoy_api_msg_core.GrpcService>`.
+* grpc-json: Added support inline descriptor in config.
+* health check: added gRPC health check based on `grpc.health.v1.Health <https://github.com/grpc/grpc/blob/master/src/proto/grpc/health/v1/health.proto>`_
+  service.
+* health check: added setting host header value for http health check request.
+* health check: extended the health check filter to support computation of the health check response
+  based on the percent of healthy servers is upstream clusters.
 * health check: added setting for :ref:`no-traffic
   interval<envoy_api_field_core.HealthCheck.no_traffic_interval>`.
+* http : added idle timeout for :ref:`upstream http connections
+  <envoy_api_field_core.HttpProtocolOptions.idle_timeout>`.
+* http: added support for proxying 100-Continue responses.
+* http: added the ability to pass a URL encoded Pem encoded peer certificate in the
+  x-forwarded-client-cert header.
+* http: added support for trusting additional hops in the X-Forwarded-For request header.
+* http: added support for incoming HTTP/1.0.
+* hot restart: added SIGTERM propagation to children to hot-restarter.py, which enables using it as
+  a parent of containers.
+* ip tagging: added :ref:`HTTP IP Tagging filter<config_http_filters_ip_tagging>`.
+* listeners: added support for listening for both IPv4 and IPv6 when binding to ::.
+* listeners: added support for listening on UNIX domain sockets.
+* listeners: added support for abstract unix domain sockets on Linux. The abstract
+  namespace can be used by prepending '@' to a socket path.
+* load balancer: added cluster configuration for healthy panic threshold percentage.
+* load balancer: added Maglev consistent hash load balancer.
+* load balancer: added support for
+  :ref:`LocalityLbEndpoints<envoy_api_msg_endpoint.LocalityLbEndpoints>` priorities.
+* lua: added headers replace() API.
+* redis: added local `PING` support to the Redis filter.
+* redis: added `GEORADIUS_RO` and `GEORADIUSBYMEMBER_RO` to the Redis command splitter whitelist.
+* router: added DOWNSTREAM_REMOTE_ADDRESS_WITHOUT_PORT header formatter. CLIENT_IP header formatter
+  has been deprecated.
+* router: added DOWNSTREAM_LOCAL_ADDRESS and DOWNSTREAM_LOCAL_ADDRESS_WITHOUT_PORT :ref:`header
+  formatters <config_http_conn_man_headers_custom_request_headers>`.
+* router: added support for dynamic response header values (`%CLIENT_IP%` and `%PROTOCOL%`).
+* router: added support for dynamic headers generated from upstream host endpoint metadata
+  (`UPSTREAM_METADATA(...)`).
+* router: added gateway-error retry-on policy.
+* router: added support for route matching based on URL query string parameters.
+  :ref:`QueryParameterMatcher<envoy_api_msg_route.QueryParameterMatcher>`
+* router: added support for more granular weighted cluster routing by allowing the total weight to
+  be specified in configuration.
+* router: added support for custom request/response headers with mixed static and dynamic values.
+* router: added support for direct responses -- i.e., sending a preconfigured HTTP response without
+  proxying anywhere.
+* router: added support for HTTPS redirects on specific routes.
+* router: added support for prefix_rewrite for redirects.
+* router: added support for stripping query string for redirects.
+* router: added support for downstream request/upstream response header manipulation in weighted
+  cluster.
+* router: added support for range based header matching for request routing.
+* squash: added support for the :ref:`Squash microservices debugger <config_http_filters_squash>`.
+  Allows debugging an incoming request to a microservice in the mesh.
+* stats: added metrics service API implementation.
+* stats: added native :ref:`DogStatsd <envoy_api_msg_config.metrics.v2.DogStatsdSink>` support.
+* stats: added support for :ref:`fixed stats tag values
+  <envoy_api_field_config.metrics.v2.TagSpecifier.fixed_value>` which will be added to all metrics.
+* tcp proxy: added support for specifying a metadata matcher for upstream clusters in the tcp filter
+* tcp proxy: improved TCP proxy to correctly proxy TCP half-close.
+* tcp proxy: added idle timeout to TCP proxy.
+* tcp proxy: access logs now bring an IP address without a port when using DOWNSTREAM_ADDRESS.
+  Use DOWNSTREAM_REMOTE_ADDRESS instead.
+* tracing: added support for dynamically loading an OpenTracing tracer.
 * tracing: when using the zipkin tracer, it is now possible for clients to specify the sampling decision (using
   the :ref:`x-b3-sampled <config_http_conn_man_headers_x-b3-sampled>` header) and have the decision
   propagated through to subsequently invoked services.
 * tracing: when using the zipkin tracer, it is no longer necessary to propagate the
   :ref:`x-ot-span-context <config_http_conn_man_headers_x-ot-span-context>` header.
   See more on trace context propagation :ref:`here <arch_overview_tracing>`.
+* transport sockets: added transport socket interface to allow custom implementation of transport
+  socket. A transport socket provides read and write logic with buffer encryption and decryption.
+  The existing TLS implementation is refactored with the interface.
+* upstream: added support for specifying alternate stats name while emitting stats for clusters.
+* Many small bug fixes and performance improvements not listed.
 
 1.5.0
 =====
